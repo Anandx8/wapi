@@ -1,0 +1,103 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+   
+</head>
+<body>
+  <div class="weather-container">
+    <h1>🌍 Weather Checker</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Check Weather</button>
+    <div id="weatherResult"></div>
+  </div>
+   <style>
+    body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.weather-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+input {
+  padding: 10px;
+  width: 250px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0066ff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #004fcc;
+}
+
+#weatherResult {
+  margin-top: 20px;
+  font-size: 18px;
+}
+   </style>
+    <script>
+      async function getWeather() {
+  const city = document.getElementById("cityInput").value.trim();
+  const resultDiv = document.getElementById("weatherResult");
+
+  if (city === "") {
+    resultDiv.innerHTML = "Please enter a city name.";
+    return;
+  }
+
+  const apiKey = "YOUR_API_KEY";
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      resultDiv.innerHTML = "City not found. Please try again.";
+      return;
+    }
+
+    const data = await response.json();
+
+    const temp = data.main.temp;
+    const condition = data.weather[0].description;
+    const humidity = data.main.humidity;
+
+    resultDiv.innerHTML = `
+      <strong>City:</strong> ${data.name} <br/>
+      <strong>Temperature:</strong> ${temp} °C <br/>
+      <strong>Condition:</strong> ${condition} <br/>
+      <strong>Humidity:</strong> ${humidity}% 
+    `;
+  } catch (error) {
+    resultDiv.innerHTML = "Error fetching weather data.";
+    console.error("Error:", error);
+  }
+}
+    </script>
+</body>
+</html>
