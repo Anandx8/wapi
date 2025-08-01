@@ -1,103 +1,143 @@
  <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather App</title>
-   
+
 </head>
+
 <body>
-  <div class="weather-container">
-    <h1>🌍 Weather Checker</h1>
-    <input type="text" id="cityInput" placeholder="Enter city name" />
-    <button onclick="getWeather()">Check Weather</button>
-    <div id="weatherResult"></div>
+  <div class="card">
+    <div class="search">
+      <input type="text" placeholder="Enter City name" spellcheck="false">
+      <button>Search</button>
+    </div>
+    <div class="weather">
+      <h1 class="temp">22°C</h1>
+      <h2 class="city">New York</h2>
+      <div class="details">
+        <div class="col">
+          <div>
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <p class="wind">15 Km/H</p>
+            <p>Wind Speed</p>
+          </div>
+        </div>
+         
+      </div>
+    </div>
   </div>
-   <style>
-    body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
-.weather-container {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-}
-
-input {
-  padding: 10px;
-  width: 250px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  margin-left: 10px;
-  border: none;
-  border-radius: 8px;
-  background-color: #0066ff;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background-color: #004fcc;
-}
-
-#weatherResult {
-  margin-top: 20px;
-  font-size: 18px;
-}
-   </style>
-    <script>
-      async function getWeather() {
-  const city = document.getElementById("cityInput").value.trim();
-  const resultDiv = document.getElementById("weatherResult");
-
-  if (city === "") {
-    resultDiv.innerHTML = "Please enter a city name.";
-    return;
-  }
-
-  const apiKey = "YOUR_API_KEY";
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      resultDiv.innerHTML = "City not found. Please try again.";
-      return;
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
     }
 
-    const data = await response.json();
+    body {
+      background-color: #222;
+    }
 
-    const temp = data.main.temp;
-    const condition = data.weather[0].description;
-    const humidity = data.main.humidity;
+    .card {
+      width: 90%;
+      max-width: 470px;
+      background: linear-gradient(135deg, #00feba, #5b548a);
+      color: #fff;
+      margin: 100px auto 0;
+      border-radius: 20px;
+      padding: 40px 35px;
+      text-align: center;
 
-    resultDiv.innerHTML = `
-      <strong>City:</strong> ${data.name} <br/>
-      <strong>Temperature:</strong> ${temp} °C <br/>
-      <strong>Condition:</strong> ${condition} <br/>
-      <strong>Humidity:</strong> ${humidity}% 
-    `;
-  } catch (error) {
-    resultDiv.innerHTML = "Error fetching weather data.";
-    console.error("Error:", error);
-  }
+    }
+
+    .search {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search input {
+      border: 0;
+      outline: 0;
+      background: #ebfffc;
+      color: #555;
+      padding: 10px 25px;
+      height: 60px;
+      border-radius: 30px;
+      flex: 1;
+      margin-right: 16px;
+      font-size: 18px;
+    }
+
+    .search button {
+      border: 0;
+      outline: 0;
+      background: #ebfffc;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+.weather h1{
+  font-size: 80px; font-weight: 500;
+
 }
-    </script>
+.weather h2{
+  font-size: 45px; font-weight: 500; margin-top: -10px;
+
+}
+ .details{
+  display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+  margin-top: 50px;
+ }
+ .col{
+  display: flex; align-items: center; text-align: left;
+ }
+.humidity, .wind{
+  font-size: 28px; margin-top: -6px;
+
+}
+ 
+
+
+
+
+
+  </style>
+  <script>
+
+    const apiKey = "b337341a00a198811f8f4d015fa6fddb";
+    const apiurl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    const searchBox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+
+    async function CheckWeather(city) {
+      const response = await fetch(apiurl + city + `&appid=${apiKey}`);
+      var data = await response.json();
+      console.log(data);
+
+
+      document.querySelector(".city").innerHTML = data.name;
+      document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+      document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+      document.querySelector(".wind").innerHTML = data.wind.speed + "Km/H";
+
+    }
+    searchBtn.addEventListener("click", () => {
+      CheckWeather(searchBox.value);
+    })
+
+  </script>
 </body>
+
 </html>
